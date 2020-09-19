@@ -1,4 +1,4 @@
-# RationalNumber, RationalMatrix and RationalVector
+# RationalNumber and RationalMatrix
 Rational Number Represented As Ratio of BigInteger
 
 

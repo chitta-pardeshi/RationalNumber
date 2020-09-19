@@ -55,14 +55,14 @@
             return M;
         }
 
-        public RationalVector Column(int c, params RationalNumber[] newvalues)
+        public RationalNumber[] Column(int c, params RationalNumber[] newvalues)
         {
             int D = Dimension;
             for (int i = 0; i < newvalues.Length && i < Dimension; i++)
             {
                 this[i, c] = newvalues[i];
             }
-            RationalVector v = new RationalVector(D);
+            RationalNumber[] v = new RationalNumber[D];
             for (int i = 0; i < D; i++)
             {
                 v[i] = this[i, c];
@@ -70,7 +70,7 @@
             return v;
         }
 
-        public RationalVector Row(int r, params RationalNumber[] newvalues)
+        public RationalNumber[] Row(int r, params RationalNumber[] newvalues)
         {
             int D = Dimension;
 
@@ -79,7 +79,7 @@
                 this[r, i] = newvalues[i];
             }
 
-            RationalVector v = new RationalVector(D);
+            RationalNumber[] v = new RationalNumber[D];
             for (int i = 0; i < D; i++)
             {
                 v[i] = this[r, i];
@@ -94,84 +94,6 @@
             return M;
         }
 
-        public static RationalMatrix From(params RationalVector[] v)
-        {
-            return FromColumns(v);
-        }
-
-        public static RationalMatrix FromColumns(RationalVector[] v, int index = 0)
-        {
-            int D = v.Length;
-            RationalMatrix M = new RationalMatrix(D);
-            for (int i = 0; i < D; i++)
-            {
-                if (v[i + index].Dimension != D)
-                {
-                    throw new System.NotSupportedException();
-                }
-                for (int r = 0; r < D; r++)
-                {
-                    M[r, i] = v[i + index][r];
-                }
-            }
-            return M;
-        }
-        public static RationalMatrix FromRows(RationalVector[] v, int index = 0)
-        {
-            int D = v.Length;
-            RationalMatrix M = new RationalMatrix(D);
-            for (int i = 0; i < D; i++)
-            {
-                if (v[i + index].Dimension != D)
-                {
-                    throw new System.NotSupportedException();
-                }
-                for (int c = 0; c < D; c++)
-                {
-                    M[i, c] = v[i + index][c];
-                }
-            }
-            return M;
-        }
-
-        public static RationalMatrix From_Eigen(RationalVector eigen_values, params RationalVector[] eigen_vectors)
-        {
-            int len = eigen_vectors.Length;
-            int d = len;
-            RationalMatrix M = new RationalMatrix(d);
-            for (int c = 0; c < d; c++)
-            {
-                if (eigen_vectors[c].Dimension != d)
-                {
-                    throw new System.NotSupportedException();
-                }
-                for (int r = 0; r < d; r++)
-                {
-                    M[r, c] = eigen_vectors[c][r];
-                }
-            }
-            RationalVector S = M.InverseMatrix() * eigen_values;
-            RationalMatrix R = M.Clone();
-            for (int i = 0; i < S.Dimension; i++)
-            {
-                for (int r = 0; r < S.Dimension; r++)
-                {
-                    R[r, i] *= S[i];
-                }
-            }
-            return R;
-        }
-
-
-        public static implicit operator RationalMatrix(RationalVector v)
-        {
-            RationalMatrix M = new RationalMatrix(v.Dimension);
-            for (int i = 0; i < v.Dimension; i++)
-            {
-                M[i, i] = v[i];
-            }
-            return M;
-        }
         public static implicit operator RationalNumber[,] (RationalMatrix M)
         {
             return M.C;

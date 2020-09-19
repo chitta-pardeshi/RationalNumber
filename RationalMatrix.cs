@@ -221,7 +221,7 @@
                     {
                         builder.Append(" , ");
                     }
-                    builder.Append((double)this[row, col]);
+                    builder.Append(this[row, col]);
                 }
                 if (row < D - 1)
                 {

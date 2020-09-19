@@ -1,0 +1,223 @@
+    public struct RationalVector
+    {
+        private readonly RationalNumber[] V;
+
+        public int Dimension
+        {
+            get
+            {
+                return V.Length;
+            }
+        }
+
+        private RationalVector(RationalNumber[] V)
+        {
+            this.V = V;
+        }
+
+        public RationalVector(int dim)
+        {
+            this.V = new RationalNumber[dim];
+            for (int i = 0; i < dim; i++)
+            {
+                this.V[i] = 0;
+            }
+        }
+
+
+        public RationalNumber this[int index]
+        {
+            get
+            {
+                return this.V[index];
+            }
+            set
+            {
+                this.V[index] = value;
+            }
+        }
+        public RationalVector Clone()
+        {
+            int D = Dimension;
+            RationalVector M = new RationalVector(D);
+            for (int i = 0; i < D; i++)
+            {
+                M[i] = this[i];
+            }
+            return M;
+        }
+        public RationalVector Clone(int dimension)
+        {
+            int D = dimension;
+            RationalVector M = new RationalVector(dimension);
+            for (int i = 0; i < D && i < dimension; i++)
+            {
+                M[i] = this[i];
+            }
+            return M;
+        }
+
+        public static implicit operator RationalVector(string line)
+        {
+            string pattern = @"-?([0-9]+)(\.[0-9]+)?";
+            var matches = System.Text.RegularExpressions.Regex.Matches(line, pattern);
+            RationalVector result = new RationalVector(matches.Count);
+            for (int i = 0; i < result.Dimension; i++)
+            {
+                result[i] = double.Parse(matches[i].Value);
+            }
+            return result;
+        }
+
+        public static implicit operator RationalNumber[] (RationalVector m)
+        {
+            return m.V;
+        }
+        public static implicit operator RationalVector(RationalNumber[] m)
+        {
+            return new RationalVector(m);
+        }
+
+        public static RationalVector From(params RationalNumber[] a)
+        {
+            RationalVector M = new RationalVector(a.Length);
+            M = a;
+            return M;
+        }
+
+        public bool Contains(params RationalNumber[] values)
+        {
+            for (int i = 0; i < values.Length; i++)
+            {
+                for (int j = 0; j < Dimension; j++)
+                {
+                    if (this[j] == values[i])
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        public RationalNumber MaximumNumber()
+        {
+            RationalNumber maxvalue = this[0];
+            for (int i = 0; i < Dimension; i++)
+            {
+                if (this[i] > maxvalue)
+                {
+                    maxvalue = this[i];
+                }
+            }
+            return maxvalue;
+        }
+        public RationalNumber MinimumNumber()
+        {
+            RationalNumber minvalue = this[0];
+            for (int i = 0; i < Dimension; i++)
+            {
+                if (this[i] < minvalue)
+                {
+                    minvalue = this[i];
+                }
+            }
+            return minvalue;
+        }
+
+        public RationalNumber SumOfPower(int exponent)
+        {
+            int D = Dimension;
+            RationalNumber result = 0;
+            for (int i = 0; i < D; i++)
+            {
+                result += this[i] ^ exponent;
+            }
+            return result;
+        }
+
+        public override string ToString()
+        {
+            int D = Dimension;
+            System.Text.StringBuilder builder = new System.Text.StringBuilder();
+
+            builder.AppendLine("[");
+            for (int row = 0; row < D; row++)
+            {
+                builder.Append("  ");
+                builder.Append((decimal)(double)this[row]);
+                if (row < D - 1)
+                {
+                    builder.Append(",");
+                }
+                builder.AppendLine();
+            }
+            builder.AppendLine("]");
+            return builder.ToString();
+        }
+
+        public static RationalVector operator +(RationalVector a, RationalVector b)
+        {
+            if (a.Dimension != b.Dimension)
+            {
+                throw new System.NotSupportedException();
+            }
+            RationalVector R = new RationalVector(a.Dimension);
+            for (int i = 0; i < R.Dimension; i++)
+            {
+                R[i] = a[i] + b[i];
+            }
+            return R;
+        }
+
+        public static RationalVector operator -(RationalVector a, RationalVector b)
+        {
+            if (a.Dimension != b.Dimension)
+            {
+                throw new System.NotSupportedException();
+            }
+            RationalVector R = new RationalVector(a.Dimension);
+            for (int i = 0; i < R.Dimension; i++)
+            {
+                R[i] = a[i] - b[i];
+            }
+            return R;
+        }
+
+        public static RationalVector operator *(RationalNumber a, RationalVector b)
+        {
+            RationalVector R = new RationalVector(b.Dimension);
+            for (int i = 0; i < R.Dimension; i++)
+            {
+                R[i] = a * b[i];
+            }
+            return R;
+        }
+
+        public static RationalVector operator /(RationalVector a, RationalNumber b)
+        {
+            RationalVector R = new RationalVector(a.Dimension);
+            for (int i = 0; i < R.Dimension; i++)
+            {
+                R[i] = a[i] / b;
+            }
+            return R;
+        }
+
+        public static RationalVector operator *(RationalMatrix a, RationalVector b)
+        {
+            if (b.Dimension != a.Dimension)
+            {
+                throw new System.NotSupportedException();
+            }
+            RationalVector R = new RationalVector(b.Dimension);
+            for (int i = 0; i < R.Dimension; i++)
+            {
+                for (int j = 0; j < R.Dimension; j++)
+                {
+                    R[i] += a[i, j] * b[j];
+                }
+            }
+            return R;
+        }
+    }

@@ -15,3 +15,12 @@ Rational Number Represented As Ratio of BigInteger
                  [ -1/5 , 2/5 ]
                 ]
             */
+            RationalMatrix C = A * B;
+            System.Console.WriteLine(C.ToString());
+
+            /* outputs
+                [
+                 [ 1 , 0 ],
+                 [ 0 , 1 ]
+                ]
+            */
